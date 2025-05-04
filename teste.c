@@ -11,7 +11,7 @@ void armazenar_nome(char palavra[TAM], char nomes[200]);
 
 int main() {
     int escolha;
-    char nomes[200] = ""; // Inicializar a string para vazio
+    char nomes[200] = "";
 
     while (1) {
         printf("\n--MENU--");
@@ -20,7 +20,7 @@ int main() {
         printf("\n---------------");
         printf("\n\n Escolha uma opção: ");
         scanf("%d", &escolha);
-        getchar(); // Limpar o buffer depois do scanf
+        getchar(); 
 
         switch (escolha) {
             case 1:
@@ -63,7 +63,7 @@ void armazenar_nome(char palavra[TAM], char nomes[200]) {
     }
 
     if (strlen(nomes) > 0) {
-        strcat(nomes, " "); // Adiciona espaço separador se já tiver nome
+        strcat(nomes, " "); 
     }
     strcat(nomes, palavra);
 }
