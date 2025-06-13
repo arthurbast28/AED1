@@ -103,7 +103,7 @@ void* adicionar_contato(void *dados_agenda) {
     // 100 bytes para strings + 3 inteiros para tamanhos/idade.
     dados_agenda = realloc(dados_agenda, *ptr_tamanho_buffer + (sizeof(char) * 100) + (sizeof(int) * 3));
   
-    // Re-mapeia os ponteiros de controle após a realocação, pois o endereço base pode ter mudado.
+    // Ajusta os ponteiros de controle após a realocação
     ptr_tamanho_buffer = (int *)((char *)dados_agenda + 2 * sizeof(int));
     int *ptr_contagem_pessoas = (int *)((char *)dados_agenda + sizeof(int));
     
@@ -139,7 +139,7 @@ void* adicionar_contato(void *dados_agenda) {
     // Realoca o buffer para o tamanho exato necessário, liberando qualquer excesso.
     dados_agenda = realloc(dados_agenda, *ptr_tamanho_buffer);
 
-    // Re-mapeia o ponteiro do tamanho do buffer novamente, caso o endereço base tenha mudado na realocação final.
+    // Ajusta o ponteiro do tamanho do buffer novamente
     ptr_tamanho_buffer = (int *)((char *)dados_agenda + 2 * sizeof(int));
     printf("\n  Contato adicionado \n");
     return dados_agenda;
@@ -158,7 +158,7 @@ void* remover_contato(void *dados_agenda) {
     // Realoca o buffer para a string de busca.
     dados_agenda = realloc(dados_agenda, *ptr_tamanho_buffer + sizeof(char) * 104); // 100 para nome + 4 pra ter certeza
 
-    // Re-mapeia os ponteiros de controle após a realocação.
+    // Ajusta os ponteiros de controle após a realocação.
     ptr_tamanho_buffer = (int *)((char *)dados_agenda + 2 * sizeof(int));
     int *ptr_contagem_pessoas = (int *)((char *)dados_agenda + sizeof(int));
     int *ptr_indice_atual = (int *)dados_agenda; 
@@ -166,7 +166,7 @@ void* remover_contato(void *dados_agenda) {
 
 
     char *nome_para_remover = (char *)dados_agenda + *ptr_tamanho_buffer;
-    printf("  Digite o NOME do registro a ser removido: ");
+    printf("  Digite o nome do contato a ser removido: ");
     scanf(" %99[^\n]%*c", nome_para_remover);
 
     // Ponteiro para o início dos dados das pessoas (após os 3 inteiros de controle).
@@ -192,21 +192,21 @@ void* remover_contato(void *dados_agenda) {
 
         if (strcmp(nome_lido, nome_para_remover) == 0) {
 
-            int tamanho_contanto_remover = (sizeof(int) + (*ptr_tam_nome_lido + 1) + sizeof(int) + sizeof(int) + (*ptr_tam_email_lido + 1));
+            *ptr_indice_atual = (sizeof(int) + (*ptr_tam_nome_lido + 1) + sizeof(int) + sizeof(int) + (*ptr_tam_email_lido + 1));
             
-            // Move os dados subsequentes para sobrescrever o registro removido.
+            // Move os dados para sobrescrever o registro removido.
             memmove(ptr_inicio_registro_atual, ptr_dados_atuais, ((char *)dados_agenda + *ptr_tamanho_buffer) - ptr_dados_atuais);
 
             (*ptr_contagem_pessoas)--;
-            *ptr_tamanho_buffer -= tamanho_contanto_remover;
+            *ptr_tamanho_buffer -= *ptr_indice_atual;
             *ptr_indice_atual = 0; 
 
-            // Realoca o buffer para o novo tamanho, liberando o espaço do registro removido.
+            // Realoca o buffer para o novo tamanho
             dados_agenda = realloc(dados_agenda, *ptr_tamanho_buffer);
 
-            // Re-mapeia o ponteiro do tamanho do buffer novamente.
+            // Ajusta o ponteiro do tamanho do buffer novamente
             ptr_tamanho_buffer = (int *)((char *)dados_agenda + 2 * sizeof(int));
-            printf("\n  Registro '%s' removido com sucesso!\n", nome_para_remover);
+            printf("\n '%s' removido com sucesso!\n", nome_para_remover);
             return dados_agenda;
         }
 
@@ -216,10 +216,10 @@ void* remover_contato(void *dados_agenda) {
     printf("\n '%s' nao foi encontrado na agenda.\n", nome_para_remover);
     *ptr_indice_atual = 0; 
 
-    // Realoca o buffer de volta ao seu tamanho original
+    // Realoca o buffer de volta ao seu tamanho inicial
     dados_agenda = realloc(dados_agenda, *ptr_tamanho_buffer);
 
-    // Re-mapeia o ponteiro do tamanho do buffer novamente.
+    // Ajusta o ponteiro do tamanho do buffer novamente.
     ptr_tamanho_buffer = (int *)((char *)dados_agenda + 2 * sizeof(int));
     return dados_agenda;
 }
@@ -234,10 +234,10 @@ void* buscar_contato(void *dados_agenda) {
         return dados_agenda;
     }
 
-    // Realoca o buffer para um espaço temporário para a string de busca.
+    // Realoca o buffer para a string de busca.
     dados_agenda = realloc(dados_agenda, *ptr_tamanho_buffer + sizeof(char) * 100); 
 
-    // Re-mapeia os ponteiros de controle após a realocação.
+    // Ajusta os ponteiros de controle após a realocação.
     ptr_tamanho_buffer = (int *)((char *)dados_agenda + 2 * sizeof(int));
     int *ptr_contagem_pessoas = (int *)((char *)dados_agenda + sizeof(int));
     int *ptr_indice_atual = (int *)dados_agenda;
@@ -275,11 +275,11 @@ void* buscar_contato(void *dados_agenda) {
             printf("================================\n");
 
             *ptr_indice_atual = 0; // Reseta o contador.
-            // Realoca o buffer de volta ao seu tamanho original
+            // Realoca o buffer de volta ao seu tamanho inicial
             dados_agenda = realloc(dados_agenda, *ptr_tamanho_buffer);
            
 
-            // Re-mapeia o ponteiro do tamanho do buffer novamente.
+            // Ajusta o ponteiro do tamanho do buffer novamente.
             ptr_tamanho_buffer = (int *)((char *)dados_agenda + 2 * sizeof(int));
             return dados_agenda;
         }
@@ -290,10 +290,10 @@ void* buscar_contato(void *dados_agenda) {
     printf("\n '%s' nao foi encontrado\n", nome_para_buscar);
     *ptr_indice_atual = 0;
 
-    // Realoca o buffer de volta ao seu tamanho original
+    // Realoca o buffer de volta ao seu tamanho inicial
     dados_agenda = realloc(dados_agenda, *ptr_tamanho_buffer);
 
-    // Re-mapeia o tamanho do buffer novamente.
+    // Ajusta o tamanho do buffer novamente.
     ptr_tamanho_buffer = (int *)((char *)dados_agenda + 2 * sizeof(int));
     return dados_agenda;
 }
