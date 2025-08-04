@@ -59,16 +59,16 @@ int trocarSubstring( char *s, char a, char b, int pontos ) {
 
 	int total = 0;
 
-	for ( int i = 0; i < n; ++i ) {
+	for ( int i = 0; i < n; i++ ) {
 		if ( s[i] == b && p.topo >= 0 && p.letra[p.topo] == a ) {
-			--p.topo;
+			p.topo--;
 			total += pontos;
 		} else {
 			p.letra[++p.topo] = s[i];
 		}
 	}
 
-	for ( int i = 0; i <= p.topo; ++i ) {
+	for ( int i = 0; i <= p.topo; i++ ) {
 		s[i] = p.letra[i];
 	}
 
